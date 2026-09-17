@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: API de Exemplo
+  version: 1.0.0
+paths:
+  /usuarios:
+    post:
+      summary: Cria um novo usuário
+      operationId: criarUsuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRequest'
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioResponse'
+        '400':
+          description: Dados inválidos (id ou nome nulos)
+components:
+  schemas:
+    UsuarioRequest:
+      type: object
+      required:
+        - id
+        - nome
+      properties:
+        id:
+          type: integer
+          format: int64
+          nullable: false
+          example: 1
+        nome:
+          type: string
+          nullable: false
+          minLength: 1
+          example: Maria
+    UsuarioResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string

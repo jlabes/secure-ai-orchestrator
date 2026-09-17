@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+        <modelVersion>4.0.0</modelVersion>
+
+        <parent>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>3.2.4</version> <!-- Versão estável do Spring Boot 3 -->
+            <relativePath/>
+        </parent>
+
+        <groupId>org.example</groupId>
+        <artifactId>SAAO</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <description>Projeto Java com Spring Boot 3 e OpenAPI Generator</description>
+
+        <properties>
+            <java.version>17</java.version> <!-- Spring Boot 3 exige no mínimo Java 17 -->
+            <springdoc.version>2.5.0</springdoc.version>
+            <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        </properties>
+
+        <dependencies>
+            <!-- Web: Necessário para criar os endpoints REST -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+
+            <!-- Validation: O OpenAPI usa para colocar regras como @NotNull nas classes geradas -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+            </dependency>
+
+            <!-- Swagger UI: Cria uma página web para você testar seus endpoints -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+
+            <!-- Requisito do OpenAPI Generator para tratar valores nulos em atualizações (PATCH) -->
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>jackson-databind-nullable</artifactId>
+                <version>${jackson-databind-nullable.version}</version>
+            </dependency>
+
+            <!-- Testes -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+
+        <build>
+            <plugins>
+                <!-- Plugin padrão do Spring Boot -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+
+                <!-- Plugin Gerador do OpenAPI -->
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>7.4.0</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Caminho do seu arquivo de contrato -->
+                                <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+
+                                <!-- Gerador focado em Spring -->
+                                <generatorName>spring</generatorName>
+
+                                <!-- Onde as classes geradas vão ficar (Pacotes) -->
+                                <apiPackage>com.exemplo.api</apiPackage>
+                                <modelPackage>com.exemplo.model</modelPackage>
+
+                                <!-- ATENCAO: o nome correto do parametro e "configOptions" -->
+                                <configOptions>
+                                    <interfaceOnly>true</interfaceOnly>
+                                    <useJakartaEe>true</useJakartaEe> <!-- Obrigatorio para Spring Boot 3 -->
+                                    <skipDefaultInterface>true</skipDefaultInterface>
+                                    <useTags>true</useTags>
+                                    <useSpringBoot3>true</useSpringBoot3>
+                                </configOptions>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </project>
